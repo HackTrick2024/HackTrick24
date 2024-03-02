@@ -1,0 +1,1 @@
+ **NOTE**: You are free to choose any preprocessing steps needed and try out different models, just know that any transform operations applied to the series also require a similar inverse transform to be applied on the predictions. 

@@ -1,12 +1,7 @@
 import torch
-import torchvision.transforms as transforms
-from imageio import imread
-import random
-import numpy as np
 from collections import Counter
 from reedsolo import RSCodec
 import zlib
-from encoders import DenseEncoder
 from decoders import DenseDecoder
 from critics import BasicCritic
 
@@ -43,11 +38,9 @@ LOAD_MODEL = True
 PRE_TRAINED_MODEL_PATH = 'image_models/DenseEncoder_DenseDecoder_0.042_2020-07-23_02_08_27.dat'
 
 
-encoder = DenseEncoder(data_depth, hidden_size).to(device)
 decoder = DenseDecoder(data_depth, hidden_size).to(device)
 critic = BasicCritic(hidden_size).to(device)
 cr_optimizer = Adam(critic.parameters(), lr=1e-4)
-en_de_optimizer = Adam(list(decoder.parameters()) + list(encoder.parameters()), lr=1e-4)
 metrics = {field: list() for field in METRIC_FIELDS}
 
 if LOAD_MODEL: 
@@ -57,9 +50,7 @@ if LOAD_MODEL:
         checkpoint = torch.load(PRE_TRAINED_MODEL_PATH, map_location=lambda storage, loc: storage)
             
 critic.load_state_dict(checkpoint['state_dict_critic'])
-encoder.load_state_dict(checkpoint['state_dict_encoder'])
 decoder.load_state_dict(checkpoint['state_dict_decoder'])
-en_de_optimizer.load_state_dict(checkpoint['en_de_optimizer'])
 cr_optimizer.load_state_dict(checkpoint['cr_optimizer'])
 
 metrics = checkpoint['metrics']
